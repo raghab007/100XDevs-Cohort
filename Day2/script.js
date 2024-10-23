@@ -67,38 +67,3 @@ const dataFromFile = readFileAsync('some.txt','utf-8')
  // promisified version of fetch
 
 
-
-class Animal {
-    constructor(name,age,color){
-        this.name = name;
-        this.age = age;
-        this.color = color;
-    
-    }
-
-     sound() {
-        console.log(`Animal ${this.name} is speaing`)
-    }
-
-    eat(){
-        console.log(`${this.name} animal is eating`)
-    }
-}
-
-
-class Dog extends Animal{
-    constructor(){
-
-    }
-    sound(){
-        super.sound();
-    }
-
-    eat(){
-        super.eat();
-    }
-}
-
-const dog1 = new Dog();
-dog1.eat()
-dog1.sound()

@@ -1,5 +1,4 @@
 
-
 // Classes and objects in javascript
 class Animal {
     constructor(name,age,color){
