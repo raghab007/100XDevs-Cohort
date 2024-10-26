@@ -1,65 +1,90 @@
 // CLI todoAPP
-const fs = require('fs');
-const { Command } = require('commander');
+const fs = require("fs");
+const { Command } = require("commander");
 const program = new Command();
 
 program
-  .name('counter')
-  .description('CLI to do file based tasks')
-  .version('0.8.0');
-let todoFile = 'raghab.json';
+  .name("counter")
+  .description("CLI to do file based tasks")
+  .version("0.8.0");
+let todoFile = "raghab.json";
 
-const readFilePromisified =  function(filename){
-  return new Promise((resolve,reject)=>{
-    fs.readFile(filename,'utf-8',function(err,data){
-        if(err){
-          reject('file not found');
-        }else{
-          resolve(data);
-        }
-    })
-  })
-}
+const readFilePromisified = function (filename) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filename, "utf-8", function (err, data) {
+      if (err) {
+        reject("file not found");
+      } else {
+        resolve(data);
+      }
+    });
+  });
+};
 
 // add todo
 program
-  .command('add')
-  .description('Add todo into the json file')
-  .argument('<data>','data to add into the file')
-  .action(async (data)=>{
-    let jsonData  =  await readFilePromisified(todoFile);
+  .command("add")
+  .description("Add todo into the json file")
+  .argument("<data>", "data to add into the file")
+  .action(async (data) => {
+    let jsonData = await readFilePromisified(todoFile);
     jsonData = JSON.parse(jsonData);
-    jsonData.push({name:data})
+    jsonData.push({ name: data });
     const stringifiedJsonData = JSON.stringify(jsonData);
-    fs.writeFile(todoFile,stringifiedJsonData,function(err){
-      console.log(err&"Error");
-    })  
-  })
+    fs.writeFile(todoFile, stringifiedJsonData, function (err) {
+      console.log(err & "Error");
+    });
+  });
 
-
-  // delete todo
+// delete todo
 program
-  .command('delete')
-  .description('Delete the todo from the json file')
-  .argument('<todo>','todo to delete from the file')
-  .action( async(todo)=>{
+  .command("delete")
+  .description("Delete the todo from the json file")
+  .argument("<todo>", "todo to delete from the file")
+  .action(async (todo) => {
     let data = await readFilePromisified(todoFile);
-    console.log(data)
+    console.log(data);
     data = JSON.parse(data);
     console.log(data);
-    data = data.filter(el=>{
-      return el.name!=todo;
-    })
+    data = data.filter((el) => {
+      return el.name != todo;
+    });
     const stringifiedJsonData = JSON.stringify(data);
-    fs.writeFile(todoFile,stringifiedJsonData,err=>{
-      if(err){
-        console.log(err)
-      }else{
-        console.log("Successfully deleted")
+    fs.writeFile(todoFile, stringifiedJsonData, (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Successfully deleted");
       }
-    })
+    });
+  });
 
-  })
 
+  
+
+
+program.command("update")
+.description('update the existing todo in the file')
+.argument('<old todo>','todo to update')
+.argument('<new todo>','new todo')
+.action( async(todo, newTodo)=>{
+  todo = todo.replace('""','');
+  newTodo = newTodo.replace('""','');
+  console.log(todo)
+  let someData = await readFilePromisified(todoFile);
+  someData = JSON.parse(someData);
+someData =  someData.map(element => {
+    if(element.name == todo){
+      return  {name:JSON.stringify(newTodo)};
+    }else{
+      return element;
+    }
+ });
+ fs.writeFile(todoFile,JSON.stringify(someData),function(error){
+  if(error){
+  console.log(error)
+  }
+ })
+})
 
 program.parse();
