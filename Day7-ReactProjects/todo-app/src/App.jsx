@@ -10,6 +10,14 @@ function App() {
   }
 
   function updateTodo(e){
+    const elClass = e.target.getAttribute('class');
+    const index = parseInt(elClass.split('-')[1]);
+    
+    console.log(document.querySelector('#input').value)
+    console.log(todos)
+   todos[index] = document.querySelector('#input').value;
+    const newTodo = [...todos]
+    setTodos(newTodo);
 
   }
 
@@ -33,18 +41,18 @@ function App() {
   )
   
 }
-
-
+// Button component
 function Button(props){
   return <button id={props.id} onClick={props.onClickHandler} className={props.class&&props.class}>{props.value}</button>
 }
 
+// Todo component 
 function Todo(props) {
   return (
     <div>
       {
         props.value.map((el, index) =>
-          <div  key={index}><p style={{display:'inline-block',marginRight:'10px',fontWeight:'bold'}}>{index+1 }.{el}</p><Button onClickHandler={props.deleteHandler} id={'todo-'+index} value={'Delete'}/><Button onClickHandler={props.updateHandler} value={'Update'} class={index}/></div>
+          <div  key={index}><p style={{display:'inline-block',marginRight:'10px',fontWeight:'bold'}}>{index+1 }.{el}</p><Button onClickHandler={props.deleteHandler} id={'todo-'+index} value={'Delete'}/><Button onClickHandler={props.updateHandler} value={'Update'} class={'todo-'+index}/></div>
         )
       }
     </div>
